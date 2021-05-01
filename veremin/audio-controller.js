@@ -1,6 +1,8 @@
 /* global Tone */
 
 import { presets } from './tonejs-presets.js'
+import * as Tone from 'tone'
+
 
 const CHANNEL = 1 // channels 1-16
 const NOTEOFF = (0x8 << 4) + (CHANNEL - 1) // equals 128 (with channel = 1)

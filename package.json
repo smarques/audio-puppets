@@ -15,8 +15,9 @@
     "@tensorflow/tfjs-converter": "^1.7.0",
     "@tensorflow/tfjs-core": "^1.7.0",
     "face-api.js": "^0.22.1",
-    "paper": "^0.12.4",
-    "stats.js": "^0.17.0"
+    "paper": "^0.12.15",
+    "stats.js": "^0.17.0",
+    "tone": "^14.7.77"
   },
   "scripts": {
     "watch": "cross-env NODE_ENV=development parcel index.html --no-hmr --open --no-source-maps ",
