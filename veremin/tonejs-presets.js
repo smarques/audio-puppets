@@ -10,8 +10,9 @@ export const presets = {
   Synth1: {
     instrument: 'Synth',
     settings: {
+      portamento: 0.5,
       oscillator: {
-        type: 'fatsine4',
+        type: 'sine',
         spread: 60,
         count: 10
       },

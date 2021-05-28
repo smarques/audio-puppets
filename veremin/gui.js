@@ -45,7 +45,7 @@ const DEFAULTCHORDS = 'minor0'
   const gui = new dat.GUI({width: 300});
 
   let multi = gui.addFolder('Image');
-  gui.add(guiState, 'avatarSVG', Object.keys(avatarSvgs)).onChange(() => parseSVG(avatarSvgs[guiState.avatarSVG]));
+  gui.add(guiState, 'avatarSVG', Object.keys(avatarSvgs)).onChange(() => {console.log('zzz');parseSVG(avatarSvgs[guiState.avatarSVG])});
   multi.open();
 
   let output = gui.addFolder('Debug control');

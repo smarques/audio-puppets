@@ -4,6 +4,7 @@ class Configuration {
   canvasWidth = 800;
   canvasHeight = 800;
   ZONEOFFSET = 10;
+  illustration = null;
   getVideoWidth() {
     return this.videoWidth;
   }
@@ -23,7 +24,13 @@ class Configuration {
     return this.videoWidth * 0.5;
   }
   getZoneHeight() {
-    return this.videoHeight * 0.7;
+    return this.videoHeight * 0.9;
+  }
+  getIllustration(){
+    return this.illustration;
+  }
+  setIllustration(ill){
+    this.illustration = ill;
   }
 }
 
