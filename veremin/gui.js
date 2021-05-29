@@ -1,6 +1,8 @@
 import dat from 'dat.gui';
 import * as girlSVG from '../resources/illustration/girl.svg';
 import * as boySVG from '../resources/illustration/boy.svg';
+import * as diavolettoSVG from '../resources/illustration/diavoletto.svg';
+
 import * as abstractSVG from '../resources/illustration/abstract.svg';
 import * as blathersSVG from '../resources/illustration/blathers.svg';
 import * as tomNookSVG from '../resources/illustration/tom-nook.svg';
@@ -8,8 +10,10 @@ import { getMidiDevices, setPreferredDevice, getBrowserPresets, setPreferredPres
 import { chords } from './chord-intervals.js'
 
 export const avatarSvgs = {
+  'diavoletto': diavolettoSVG.default,
   'girl': girlSVG.default,
   'boy': boySVG.default,
+ 
   'abstract': abstractSVG.default,
   'blathers': blathersSVG.default,
   'tom-nook': tomNookSVG.default,
@@ -45,7 +49,7 @@ const DEFAULTCHORDS = 'minor0'
   const gui = new dat.GUI({width: 300});
 
   let multi = gui.addFolder('Image');
-  gui.add(guiState, 'avatarSVG', Object.keys(avatarSvgs)).onChange(() => {console.log('zzz');parseSVG(avatarSvgs[guiState.avatarSVG])});
+  gui.add(guiState, 'avatarSVG', Object.keys(avatarSvgs)).onChange(() => parseSVG(avatarSvgs[guiState.avatarSVG]));
   multi.open();
 
   let output = gui.addFolder('Debug control');

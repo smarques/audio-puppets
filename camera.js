@@ -54,7 +54,7 @@ let videoHeight = config.getVideoHeight();
 
 // Canvas
 let faceDetection = null;
-let illustration = null;
+// let illustration = null;
 let canvasScope;
 let canvasWidth = config.getCanvasWidth();
 let canvasHeight = config.getCanvasHeight();
@@ -214,19 +214,19 @@ function detectPoseInRealTime(video) {
 
     canvasScope.project.clear();
 
-    if (poses.length >= 1 && illustration) {
+    if (poses.length >= 1 && config.getIllustration()) {
       Skeleton.flipPose(poses[0]);
 
       if (faceDetection && faceDetection.length > 0) {
         let face = Skeleton.toFaceFrame(faceDetection[0]);
-        illustration.updateSkeleton(poses[0], face);
+        config.getIllustration().updateSkeleton(poses[0], face);
       } else {
-        illustration.updateSkeleton(poses[0], null);
+        config.getIllustration().updateSkeleton(poses[0], null);
       }
-      illustration.draw(canvasScope, videoWidth, videoHeight);
+      config.getIllustration().draw(canvasScope, videoWidth, videoHeight);
 
       if (guiState.debug.showIllustrationDebug) {
-        illustration.debugDraw(canvasScope);
+        config.getIllustration().debugDraw(canvasScope);
       }
     }
 
@@ -249,9 +249,13 @@ function setupCanvas() {
   mobile = isMobile();
   if (mobile) {
     canvasWidth = Math.min(window.innerWidth, window.innerHeight);
-    canvasHeight = canvasWidth;
+   
+    canvasHeight = window.innerHeight ;
     videoWidth *= 0.7;
     videoHeight *= 0.7;
+  } else {
+     canvasWidth = Math.round(window.innerWidth * 0.9);
+     canvasHeight = Math.round(window.innerHeight * 0.9);
   }
 
   canvasScope = paper.default;
@@ -316,8 +320,9 @@ FileUtils.setDragDropHandler((result) => {
 async function parseSVG(target) {
   let svgScope = await SVGUtils.importSVG(target /* SVG string or file path */);
   let skeleton = new Skeleton(svgScope);
-  illustration = new PoseIllustration(canvasScope);
+  let illustration = new PoseIllustration(canvasScope);
   illustration.bindSkeleton(skeleton, svgScope);
+  config.setIllustration(illustration);
 }
 
 
