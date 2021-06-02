@@ -21,6 +21,8 @@ import * as tf from "@tensorflow/tfjs";
 import * as paper from "paper";
 import Stats from "stats.js";
 import "babel-polyfill";
+import {startSequences} from "./veremin/sequences";
+import {getCurrentPose, setCurrentPose} from "./veremin/current-pose";
 
 import {
   drawKeypoints,
@@ -73,6 +75,8 @@ const stats = new Stats();
 const ZONEOFFSET = config.getZoneOffset();
 let ZONEWIDTH = config.getZoneWidth();
 let ZONEHEIGHT = config.getZoneHeight();
+
+const MIN_CONFIDENCE = 0.1;
 /**
  * Loads a the camera to be used in the demo
  *
@@ -185,15 +189,6 @@ function detectPoseInRealTime(video) {
         if (score >= minPoseConfidence) {
           drawKeypoints(keypoints, minPartConfidence, keypointCtx);
           drawSkeleton(keypoints, minPartConfidence, keypointCtx);
-          processPose(
-            score,
-            keypoints,
-            minPartConfidence,
-            topOffset,
-            notesOffset,
-            chordsArray,
-            guiState
-          );
         }
       });
       faceDetection.forEach((face) => {
@@ -211,10 +206,24 @@ function detectPoseInRealTime(video) {
         keypointCtx
       );
     }
-
+    
     canvasScope.project.clear();
 
     if (poses.length >= 1 && config.getIllustration()) {
+      let { score, keypoints } = poses[0];
+      if(score < MIN_CONFIDENCE){
+        setCurrentPose(null);
+      }
+      setCurrentPose(poses[0]);
+      processPose(
+        score,
+        keypoints,
+        minPartConfidence,
+        topOffset,
+        notesOffset,
+        chordsArray,
+        guiState
+      );
       Skeleton.flipPose(poses[0]);
 
       if (faceDetection && faceDetection.length > 0) {
@@ -228,6 +237,8 @@ function detectPoseInRealTime(video) {
       if (guiState.debug.showIllustrationDebug) {
         config.getIllustration().debugDraw(canvasScope);
       }
+    } else {
+      setCurrentPose(null);
     }
 
     canvasScope.project.activeLayer.scale(
@@ -307,6 +318,7 @@ export async function bindPage() {
 
   toggleLoadingUI(false);
   detectPoseInRealTime(video, posenet);
+  startSequences();
 }
 
 navigator.getUserMedia =

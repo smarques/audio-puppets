@@ -40,6 +40,7 @@ import { config } from "./config.js";
       topOffset + notesOffset,
       config.getZoneHeight() + notesOffset
     );
+    console.log(position.left.horizontal);
     if (position.right.vertical > 0 && position.left.horizontal > 0) {
       playNote(
         position.right.vertical, // note
@@ -153,7 +154,7 @@ import { config } from "./config.js";
     position.right.vertical = computePercentage(rightZone.y, bottomEdge, topEdge)
   }
   if (leftZone.x >= leftEdge && leftZone.x <= verticalSplit) {
-    position.left.horizontal = computePercentage(leftZone.x, verticalSplit, leftEdge)
+    position.left.horizontal = computePercentage(leftZone.x, verticalSplit / 1.5, leftEdge) * 0.90
   }
   if (leftZone.y <= config.getZoneHeight() && leftZone.y >= config.getZoneOffset()) {
     position.left.vertical = computePercentage(leftZone.y, config.getZoneHeight(), config.getZoneOffset())
