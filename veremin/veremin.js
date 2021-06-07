@@ -154,7 +154,7 @@ import { config } from "./config.js";
     position.right.vertical = computePercentage(rightZone.y, bottomEdge, topEdge)
   }
   if (leftZone.x >= leftEdge && leftZone.x <= verticalSplit) {
-    position.left.horizontal = computePercentage(leftZone.x, verticalSplit / 1.5, leftEdge) * 0.90
+    position.left.horizontal = computePercentage(leftZone.x, verticalSplit / 1.2, leftEdge) * 0.90
   }
   if (leftZone.y <= config.getZoneHeight() && leftZone.y >= config.getZoneOffset()) {
     position.left.vertical = computePercentage(leftZone.y, config.getZoneHeight(), config.getZoneOffset())
