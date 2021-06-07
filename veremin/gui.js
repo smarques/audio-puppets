@@ -22,7 +22,7 @@ export const avatarSvgs = {
 export const guiState = {
   avatarSVG: Object.keys(avatarSvgs)[0],
   debug: {
-    showDetectionDebug: true,
+    showDetectionDebug: false,
     showIllustrationDebug: false,
   },
   outputDevice: 'browser',

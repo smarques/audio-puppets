@@ -19,10 +19,10 @@ import * as posenet_module from "@tensorflow-models/posenet";
 import * as facemesh_module from "@tensorflow-models/facemesh";
 import * as tf from "@tensorflow/tfjs";
 import * as paper from "paper";
-import Stats from "stats.js";
+//import Stats from "stats.js";
 import "babel-polyfill";
-import {startSequences} from "./veremin/sequences";
-import {getCurrentPose, setCurrentPose} from "./veremin/current-pose";
+import { startSequences } from "./veremin/sequences";
+import { getCurrentPose, setCurrentPose } from "./veremin/current-pose";
 
 import {
   drawKeypoints,
@@ -37,7 +37,6 @@ import { PoseIllustration } from "./illustrationGen/illustration";
 import { Skeleton, facePartName2Index } from "./illustrationGen/skeleton";
 import { FileUtils } from "./utils/fileUtils";
 
-
 import { chords } from "./veremin/chord-intervals.js";
 import {
   drawBox,
@@ -46,7 +45,7 @@ import {
   drawText,
 } from "./veremin/canvas-overlay.js";
 import { avatarSvgs, setupGui, guiState } from "./veremin/gui.js";
-import { processPose} from "./veremin/veremin.js";
+import { processPose } from "./veremin/veremin.js";
 import { config } from "./veremin/config.js";
 
 // Camera stream video element
@@ -70,13 +69,14 @@ let nmsRadius = 30.0;
 
 // Misc
 let mobile = false;
-const stats = new Stats();
+//const stats = new Stats();
 
 const ZONEOFFSET = config.getZoneOffset();
 let ZONEWIDTH = config.getZoneWidth();
 let ZONEHEIGHT = config.getZoneHeight();
 
-const MIN_CONFIDENCE = 0.1;
+const MIN_CONFIDENCE = 0.3;
+const showCameraFeed = true;
 /**
  * Loads a the camera to be used in the demo
  *
@@ -122,13 +122,13 @@ const defaultMultiplier = 1.0;
 const defaultStride = 16;
 const defaultInputResolution = 200;
 
-/**
- * Sets up a frames per second panel on the top-left of the window
- */
-function setupFPS() {
-  stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
-  document.getElementById("main").appendChild(stats.dom);
-}
+// /**
+//  * Sets up a frames per second panel on the top-left of the window
+//  */
+// function setupFPS() {
+//   stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
+//   document.getElementById("main").appendChild(stats.dom);
+// }
 
 /**
  * Feeds an image to posenet to estimate poses - this is where the magic
@@ -147,27 +147,31 @@ function detectPoseInRealTime(video) {
 
   async function poseDetectionFrame() {
     // Begin monitoring code for frames per second
-    stats.begin();
+    //stats.begin();
     const topOffset =
       ZONEHEIGHT - ZONEHEIGHT * guiState.notesRangeScale + ZONEOFFSET;
     const notesOffset = (ZONEHEIGHT - topOffset) * guiState.notesRangeOffset;
-    const chordsInterval = guiState.chordIntervals === 'default' ? null : guiState.chordIntervals
-    let chordsArray = []
-    if (chordsInterval &&
-        chordsInterval !== 'default' &&
-        Object.prototype.hasOwnProperty.call(chords, chordsInterval)) {
-      chordsArray = chords[chordsInterval]
+    const chordsInterval =
+      guiState.chordIntervals === "default" ? null : guiState.chordIntervals;
+    let chordsArray = [];
+    if (
+      chordsInterval &&
+      chordsInterval !== "default" &&
+      Object.prototype.hasOwnProperty.call(chords, chordsInterval)
+    ) {
+      chordsArray = chords[chordsInterval];
     }
 
     let poses = [];
-
-    videoCtx.clearRect(0, 0, videoWidth, videoHeight);
-    // Draw video
-    videoCtx.save();
-    videoCtx.scale(-1, 1);
-    videoCtx.translate(-videoWidth, 0);
-    videoCtx.drawImage(video, 0, 0, videoWidth, videoHeight);
-    videoCtx.restore();
+    if (showCameraFeed) {
+      videoCtx.clearRect(0, 0, videoWidth, videoHeight);
+      // Draw video
+      videoCtx.save();
+      videoCtx.scale(-1, 1);
+      videoCtx.translate(-videoWidth, 0);
+      videoCtx.drawImage(video, 0, 0, videoWidth, videoHeight);
+      videoCtx.restore();
+    }
 
     // Creates a tensor from an image
     const input = tf.browser.fromPixels(canvas);
@@ -206,12 +210,12 @@ function detectPoseInRealTime(video) {
         keypointCtx
       );
     }
-    
+
     canvasScope.project.clear();
 
     if (poses.length >= 1 && config.getIllustration()) {
       let { score, keypoints } = poses[0];
-      if(score < MIN_CONFIDENCE){
+      if (score < MIN_CONFIDENCE) {
         setCurrentPose(null);
       }
       setCurrentPose(poses[0]);
@@ -248,7 +252,7 @@ function detectPoseInRealTime(video) {
     );
 
     // End monitoring code for frames per second
-    stats.end();
+    //stats.end();
 
     requestAnimationFrame(poseDetectionFrame);
   }
@@ -260,13 +264,13 @@ function setupCanvas() {
   mobile = isMobile();
   if (mobile) {
     canvasWidth = Math.min(window.innerWidth, window.innerHeight);
-   
-    canvasHeight = window.innerHeight ;
+
+    canvasHeight = window.innerHeight;
     videoWidth *= 0.7;
     videoHeight *= 0.7;
   } else {
-     canvasWidth = Math.round(window.innerWidth * 0.9);
-     canvasHeight = Math.round(window.innerHeight * 0.9);
+    canvasWidth = Math.round(window.innerWidth * 0.9);
+    canvasHeight = Math.round(window.innerHeight * 0.9);
   }
 
   canvasScope = paper.default;
@@ -314,7 +318,7 @@ export async function bindPage() {
 
   //setupGui([], posenet);
   setupGui([], guiState);
-  setupFPS();
+  //setupFPS();
 
   toggleLoadingUI(false);
   detectPoseInRealTime(video, posenet);
@@ -336,7 +340,5 @@ async function parseSVG(target) {
   illustration.bindSkeleton(skeleton, svgScope);
   config.setIllustration(illustration);
 }
-
-
 
 bindPage();

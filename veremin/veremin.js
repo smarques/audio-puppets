@@ -40,7 +40,7 @@ import { config } from "./config.js";
       topOffset + notesOffset,
       config.getZoneHeight() + notesOffset
     );
-    console.log(position.left.horizontal);
+    //console.log(position.left.horizontal);
     if (position.right.vertical > 0 && position.left.horizontal > 0) {
       playNote(
         position.right.vertical, // note
